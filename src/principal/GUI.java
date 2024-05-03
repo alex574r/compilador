@@ -10,9 +10,11 @@ import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import javax.swing.UIManager;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -21,15 +23,39 @@ import javax.swing.UIManager;
 public class GUI extends javax.swing.JFrame {
 
     NumeroLinea numeroLinea;
+
     public GUI() {
         initComponents();
         init();
     }
-    private void init(){
+
+    private void init() {
         numeroLinea = new NumeroLinea(panelCode);
         jScrollPane1.setRowHeaderView(numeroLinea);
         numeroLinea.setBackground(new java.awt.Color(49, 51, 53));
         numeroLinea.setForeground(new java.awt.Color(102, 102, 102));
+
+        
+    }
+
+    void comprobar() {
+        String contenido = panelCode.getText().trim();
+        LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer(contenido);
+        List<Token> tokens = lexicalAnalyzer.analyze();
+        DefaultTableModel modelo = new DefaultTableModel();
+        modelo.addColumn("Lexema");
+        modelo.addColumn("Token");
+        tabla.setModel(modelo);
+        // Limpiar la tabla antes de agregar nuevos datos
+        modelo.setRowCount(0);
+        for (Token token : tokens) {
+            TokenType type = token.getType();
+            String value = token.getValue();
+            // Agregar una nueva fila al modelo de la tabla
+            modelo.addRow(new Object[]{type, value});
+        }
+        // Establecer el modelo de la tabla después de haber completado todas las filas
+        tabla.setModel(modelo);
     }
 
     /**
@@ -46,6 +72,9 @@ public class GUI extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         panelCode = new javax.swing.JTextPane();
+        jButton1 = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tabla = new javax.swing.JTable();
 
         jMenuItem1.setText("int");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
@@ -78,9 +107,36 @@ public class GUI extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(panelCode);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 50, 520, 300));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 120, 520, 300));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 910, 560));
+        jButton1.setText("jButton1");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 490, -1, -1));
+
+        tabla.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {}
+            },
+            new String [] {
+
+            }
+        ));
+        jScrollPane3.setViewportView(tabla);
+
+        jPanel1.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 130, -1, -1));
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1070, 590));
 
         pack();
         setLocationRelativeTo(null);
@@ -88,9 +144,9 @@ public class GUI extends javax.swing.JFrame {
 
     private void panelCodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_panelCodeKeyPressed
         if (evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_SPACE) {
-                    // Muestra el mensaje
-                    
-                }
+            // Muestra el mensaje
+
+        }
     }//GEN-LAST:event_panelCodeKeyPressed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
@@ -98,10 +154,21 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jMenuItem1KeyPressed
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            panelCode.setText("hola");
-        }
+
     }//GEN-LAST:event_jMenuItem1KeyPressed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        /*
+         String contenido=panelCode.getText().trim();
+        LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer(contenido);
+        List<Token> tokens = lexicalAnalyzer.analyze();
+        for (Token token : tokens) {
+            System.out.println(token);
+        }
+        
+         */
+        comprobar();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -119,10 +186,13 @@ public class GUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTextPane panelCode;
+    private javax.swing.JTable tabla;
     // End of variables declaration//GEN-END:variables
 }
